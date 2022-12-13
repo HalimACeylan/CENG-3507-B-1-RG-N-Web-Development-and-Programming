@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="js/main.js" defer></script>
+    <script src="js/confetti.js"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="header">
+        <h1> Welcome Harvard University Lecture System</h1>
+    </div>
+    <section>
+        <nav>
+            <span onclick="bringTable('Lecture-Form')">Add Lecture</span>
+            <span onclick="bringTable('LecturesTable')">Lectures</span>
+            <span onclick="bringTable('StudentsTable')">Students</span>
+            <!-- <span onclick="bringTable('LecturesTable')">Lectures</span> -->
+        </nav>
+        <div id="table-section">
+                <form id="Lecture-Form" class="Tables-active" action="#" >
+                    <input id="lname" placeholder="Lecture Name" type="text">
+                    <label class="switch">
+                        <input id="pointscale" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    <span> 7 point Scale</span>
+                    <input type="submit" style="padding: 20px; margin-top:20px;" onclick="insertLecture('Lecture-Form')"></input>
+                </form>
+            <div id="LecturesTable" class="Tables-hidden">
+                <div id="table-navbar">
+                    <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+                </div>
+                <table id="lectures-Table">
+                <thead>
+                    <tr>
+                        <td>Lecture Name</td>
+                        <td>Lecture Point System</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                </table>
+        </div>
+        <div id="Lecture" class="Tables-hidden">
+            <h1 id="Lecture-header">Lecture Name</h1>
+            <form id="student-Form" action="#" >
+                <input id="studentNameInput" placeholder="Student Name" type="text">
+                <input id="studentIdInput" placeholder="studentID" type="number" min="0" oninput= "this.value =!!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" >
+                <input id="studentMidtermInput" placeholder="Midterm" type="number" min="0" oninput= "this.value =!!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+                <input id="studentFinalInput" placeholder="Final" type="number" min="0" oninput= "this.value =!!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+                <input type="submit" value="Add" style="padding: 20px; margin-top:20px;" onclick="addStudentToLecture()"></input>
+
+            </form>
+
+            <div id="table-navbar">
+                <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+            </div>
+            <label class="switch">
+                <input id="failedStudent" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <span>Failed Student</span>
+            <table id = "lecture-Table">
+                <thead>
+                    <tr>
+                        <td>Student name</td>
+                        <td>Student id</td>
+                        <td>Midterm</td>
+                        <td>Final</td>
+                        <td>Grade</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="StudentsTable" class="Tables-hidden">
+            <div id="table-navbar">
+                <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+            </div>
+            <table id="students-table">
+            <thead>
+                <tr>
+                    <td>Student Name</td>
+                    <td>Student Id</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            </table>
+            <button style="padding: 20px;" onclick="refleshStudentTable()">Reflesh Table</button>
+    </div>  
+    <div id="StudentTable" class="Tables-hidden">
+        <h1 id="Student-header">Student Name</h1>
+        <div id="table-navbar">
+            <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+        </div>
+        <table id="student-table">
+        <thead>
+            <tr>
+                <td>lecture Name</td>
+                <td>midterm</td>
+                <td>Final</td>
+                <td>Grade</td>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        </table>
+</div>  
+    </section>
+</body>
+
+</html>
