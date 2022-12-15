@@ -2,12 +2,12 @@ const lectureList = []
 let studentList;
 let currentLectureFailedStudentList = []
 let currentLectureSuccesStudentList = []
-
+// back up of empty tables.All tables are dynamicly created so before every creation we need to reset table. 
 var LecturesoriginalHTML = document.getElementById("lectures-Table").innerHTML;
 var LectureoriginalHTML = document.getElementById("lecture-Table").innerHTML;
 var StudentsoriginalHTML = document.getElementById("students-table").innerHTML;
 var StudentoriginalHTML = document.getElementById("student-table").innerHTML;
-
+//search method: search the first and second cell in Active table with studentName and studentId or Lecture Name and Point System
 function Search() {
   var input, filter, table, tr, td, i, txtValue;
   active = document.getElementsByClassName("Tables-active")[0];
@@ -29,7 +29,7 @@ function Search() {
     }
   }
 }
-
+//There are 4 table and 1 form(adding Lecture). when user click side panel's <span>s it hide current active table and bring to screen table what user requested for.
 function bringTable(id) {
   hideTables();
   table = document.getElementById(id);
@@ -42,17 +42,22 @@ function hideTables() {
   table.classList.remove("Tables-active");
   table.classList.add("Tables-hidden");
 }
+//push new lecture to global lectureList 
 function insertLecture(Form) {
+  //user input
   form = document.getElementById(Form)
-  if ((form.lname.value.toUpperCase() === "WEB DEVELOPMENT AND PROGRAMMING") || (form.lname.value.toUpperCase() === "BEKIR TANER DINÇER") || (form.lname.value.toUpperCase() === "GÜLŞEN BEYZA YILMAZER")) {
+  //for fun
+  if ((form.lname.value.toUpperCase() === "WEB DEVELOPMENT AND PROGRAMMING") || (form.lname.value.toUpperCase() === "BEKIR TANER DINÇER") || (form.lname.value.toUpperCase() === "SELAHATTIN AKSOY")) {
     startConfetti();
     setTimeout(stopConfetti, 3000);
   }
+  //if list is empty don't check exist
   if (lectureList.length === 0) {
     lectureList.push(createLecture(form.lname.value, form.pointscale.checked));
   } else {
     let isLectureExist = false;
     filter = form.lname.value.toUpperCase();
+    //check lecture is already exist if exist return false
     lectureList.every(element => {
       isLectureExist = (element.name.toUpperCase() === filter)
       return !isLectureExist;
@@ -61,16 +66,20 @@ function insertLecture(Form) {
       alert("Lecture already exist");
       return -1;
     } else {
+      //if not exist push to Student List
       lectureList.push(createLecture(form.lname.value, form.pointscale.checked));
     }
   }
   createLecturesTable();
 }
-
+//Create Table according to Current LectureList
 function createLecturesTable() {
+  //Get Table
   table = document.getElementById("lectures-Table");
+  //Reset Table
   table.innerHTML = LecturesoriginalHTML;
   table = table.getElementsByTagName('tbody')[0];
+  // Create Table According to LectureList
   lectureList.forEach(element => {
     newRow = table.insertRow();
     lectureName = newRow.insertCell();
@@ -81,31 +90,38 @@ function createLecturesTable() {
     } else {
       lecturepointtext = "10 point system"
     }
+    //We need to convert it Text Node to add taable
     namenode = document.createTextNode(element.name);
     lecture_point_system_node = document.createTextNode(lecturepointtext);
     lectureName.appendChild(namenode);
     lecture_point_system.appendChild(lecture_point_system_node);
+    //trash Image
     var img = document.createElement('img');
     img.src = "/resources/trash-bin.png"
     deletion.appendChild(img)
     deletion.addEventListener("click", deleteLecture)
+    //Add Event listener Every row attach to Lecture Object
     newRow.addEventListener("click", lectureRowClick)
   });
 }
 function lectureRowClick(e) {
   row = e.currentTarget;
   let lecturename = row.cells[0].textContent
+  //Find the lecture in lecture Table by name
   for (var i = 0; i < lectureList.length; i++) {
     if (lectureList[i].name === lecturename) {
       clickedLecture = lectureList[i]
     }
   }
+  //bring lecture table
   bringTable('Lecture')
+  //give our Lecture object as parameter to dynamic Table Create function
   createLectureTable(clickedLecture)
 }
 function deleteLecture(e) {
   row = e.target.parentElement.parentElement;
   row.removeEventListener("click", lectureRowClick)
+  //get the lecture name
   rowname = row.getElementsByTagName("td")[0].textContent;
   for (var i = 0; i < lectureList.length; i++) {
     if (lectureList[i].name === rowname) {
@@ -113,17 +129,41 @@ function deleteLecture(e) {
       lectureList.splice(i, 1);
     }
   }
+  //reflesh the table after deletion
   createLecturesTable();
   refleshStudentTable()
 }
+
+//Lecture Table:
+/* <thead>
+<tr>
+    <td>Student name</td>
+    <td>Student id</td>
+    <td>Midterm</td>
+    <td>Final</td>
+    <td>Grade</td>
+    <td>Delete</td>
+</tr>
+</thead> */
+//Lecture Object Model is:
+// {
+//   name: name,
+//   is7PointScale: is7PointScale,
+//   studentList: [],
+// };
+
+// Create a LectureTable 
 function createLectureTable(clickedLecture) {
+  // reset variable
   currentLectureFailedStudentList = []
   currentLectureSuccesStudentList = []
   let MeanOfCurrentLectureMidterm = 0;
   let MeanOfCurrentLectureFinal = 0;
   let MeanOfCurrentLecture = 0;
   table = document.getElementById('lecture-Table')
+  // reset table
   table.innerHTML = LectureoriginalHTML;
+  //give the name of lecture to Header
   header = document.getElementById('Lecture-header');
   header.textContent = clickedLecture.name
   is7PointScale = clickedLecture.is7PointScale;
@@ -178,6 +218,7 @@ function createLectureTable(clickedLecture) {
       }
 
     }
+    // student Letter Note
     student.grade = grade_note_text;
     studentname_node = document.createTextNode(student.name);
     studentname_Id = document.createTextNode(student.id);
@@ -189,18 +230,21 @@ function createLectureTable(clickedLecture) {
     midterm.appendChild(midterm_node);
     final.appendChild(final_node);
     grade.appendChild(grade_node);
+    // create delete cell
     var img = document.createElement('img');
     img.src = "/resources/trash-bin.png"
     deletion.appendChild(img)
-    deletion.addEventListener("click", deleteStudent)
+    deletion.addEventListener("click", DeleteStudentFromLecture)
     MeanOfCurrentLecture += meanofStudent;
     MeanOfCurrentLectureMidterm += parseInt(student.midtermscore);
     MeanOfCurrentLectureFinal += parseInt(student.finalscore);
+    // update if user click student row
     newRow.addEventListener("click", updateStudentRow)
   }
   MeanOfCurrentLecture = (MeanOfCurrentLecture / clickedLecture.studentList.length);
   MeanOfCurrentLectureMidterm = (MeanOfCurrentLectureMidterm / clickedLecture.studentList.length);
   MeanOfCurrentLectureFinal = (MeanOfCurrentLectureFinal / clickedLecture.studentList.length);
+  // add a mean row to end of table
   if (MeanOfCurrentLecture || MeanOfCurrentLectureMidterm || MeanOfCurrentLectureFinal) {
     meanrow = table.insertRow();
     nameofrow = meanrow.insertCell();
@@ -217,39 +261,49 @@ function createLectureTable(clickedLecture) {
     meanOfFinal.appendChild(meanOfFinal_node);
   }
 }
+// Update Student info in Lecture Table
 function updateStudentRow(e) {
   row = e.currentTarget;
+  // get all information about Student
   let name = row.cells[0].textContent
   let id = row.cells[1].textContent
   let midterm = row.cells[2].textContent
   let final = row.cells[3].textContent
+  // put it form of Student add
   document.getElementById('studentNameInput').value = name;
   document.getElementById('studentIdInput').value = id;
   document.getElementById('studentMidtermInput').value = midterm;
   document.getElementById('studentFinalInput').value = final;
+  // scroll up to form 
   var element = document.getElementById("header");
   element.scrollIntoView({ behavior: "smooth" });
-  refleshStudentTable()
 }
-function deleteStudent(e) {
+//Delete Student From Lecture
+function DeleteStudentFromLecture(e) {
+  //get the lecture name using by header 
   var lectureName = document.getElementById('Lecture-header').textContent;
+  // find lecture
   for (var i = 0; i < lectureList.length; i++) {
     if (lectureList[i].name === lectureName) {
       currentLecture = lectureList[i]
     }
   }
+  // get student id from row
   row = e.target.parentElement.parentElement;
   row.removeEventListener("click", lectureRowClick)
   rowid = row.getElementsByTagName("td")[1].textContent;
+  // find student with Student Id
   for (var i = 0; i < currentLecture.studentList.length; i++) {
     element = currentLecture.studentList[i]
     if (element.id === rowid) {
       currentLecture.studentList.splice(i, 1);
     }
   }
+  // reflesh and recreate Lecture Table
   createLectureTable(currentLecture);
   refleshStudentTable()
 }
+// Read Student add form info and add List
 function addStudentToLecture() {
   var lectureName = document.getElementById('Lecture-header').textContent;
   for (var i = 0; i < lectureList.length; i++) {
@@ -263,14 +317,17 @@ function addStudentToLecture() {
   final = document.getElementById('studentFinalInput').value;
   isStudentAlreadyExistInClass = false
   isStudentSame = false;
+  // Check Student by id if it is already in Lecture 
   currentLecture.studentList.every(element => {
     isStudentAlreadyExistInClass = element.id === studentid;
+    // check Student name and Id is same if it is then update Student
     isStudentSame = element.name.toUpperCase() === studentname.toUpperCase();
     return !isStudentAlreadyExistInClass;
   });
   if (isStudentAlreadyExistInClass) {
     if (isStudentSame) {
-      currentLecture.studentList.forEach(element => {
+          // check Student name and Id is same if it is then update Student
+-      currentLecture.studentList.forEach(element => {
         if (element.id === studentid) {
           element.midtermscore = midterm;
           element.finalscore = final;
@@ -287,11 +344,13 @@ function addStudentToLecture() {
   refleshStudentTable()
 
 }
+// display student by failed or Succesed 
 function displayStudents(isSuccesStudentsList) {
   let list;
   if (isSuccesStudentsList) list = currentLectureSuccesStudentList;
   else list = currentLectureFailedStudentList;
   table = document.getElementById('lecture-Table')
+  //reset table
   table.innerHTML = LectureoriginalHTML;
   table = table.getElementsByTagName('tbody')[0];
   for (var i = 0; i < list.length; i++) {
@@ -316,18 +375,19 @@ function displayStudents(isSuccesStudentsList) {
     var img = document.createElement('img');
     img.src = "/resources/trash-bin.png"
     deletion.appendChild(img)
-    deletion.addEventListener("click", deleteStudent)
+    deletion.addEventListener("click", DeleteStudentFromLecture)
   }
 }
+//get data from lectures's studentslist to create studentList
 function refleshStudentList() {
   studentList = new Object();
   for (var i = 0; i < lectureList.length; i++) {
     for (var j = 0; j < lectureList[i].studentList.length; j++) {
       student = lectureList[i].studentList[j]
       lecturename = lectureList[i].name
-      isStudentExist = studentList[student.id]
+      isStudentExist = studentList[student.id] // if is not in studentList return falsy statement
       if (isStudentExist) {
-        let isLectureAlreadyExist = false
+        let isLectureAlreadyExist = false // check lecture Already Exist
         studentList[student.id].score.every(element => {
           isLectureAlreadyExist = element.lecture === lecturename
           return !isLectureAlreadyExist;
@@ -337,9 +397,11 @@ function refleshStudentList() {
           continue;
         }
         else {
+          //every Student have a list of lecture (score) that the student has registered;
           studentList[student.id].score.push({ lecture: lecturename, midterm: student.midtermscore, final: student.finalscore, grade: student.grade })
         }
       } else {
+          //create Student if not exist in StudentList;
         studentList[student.id] = { name: student.name, id: student.id, score: [{ lecture: lecturename, midterm: student.midtermscore, final: student.finalscore, grade: student.grade }] }
       }
     }
@@ -352,6 +414,7 @@ function refleshStudentTable() {
 
 function createStudentsTable() {
   table = document.getElementById('students-table')
+  //reset table
   table.innerHTML = StudentsoriginalHTML;
   table = table.getElementsByTagName('tbody')[0];
   for (const [key, value] of Object.entries(studentList)) {
@@ -371,13 +434,11 @@ function createStudentsTable() {
     newRow.addEventListener("click", studentrowClick)
   }
 }
-
+//delete the Student from  All Lectures that the Student has registered;
 function deleteAllStudent(e){
 row = e.currentTarget.parentElement;
-console.log(row)  
 row.removeEventListener("click", studentrowClick)
 studentId = row.getElementsByTagName("td")[1].textContent;
-console.log(studentId)
 for (var i = 0; i < lectureList.length; i++) {
 for (var j = 0; j < lectureList[i].studentList.length; j++) {
   student = lectureList[i].studentList[j]
@@ -390,9 +451,11 @@ for (var j = 0; j < lectureList[i].studentList.length; j++) {
 refleshStudentList();
 createStudentsTable();
 }
-
+// When User Click Student row see detail of the Student
 function studentrowClick(e) {
+  //row
   row = e.currentTarget;
+  //get Student id from row
   let studentId = row.cells[1].textContent
   let clickedstudent;
   for (const [key, value] of Object.entries(studentList)) {
@@ -403,12 +466,16 @@ function studentrowClick(e) {
   bringTable('StudentTable');
   createStudentsNoteTable(clickedstudent);
 }
+// Dynamicly create list of Lecture of The Student that we choose by clicking row
 function createStudentsNoteTable(clickedstudent) {
+  // update header
   header = document.getElementById('Student-header');
   header.textContent = clickedstudent.name
+  // update header
   idHeader = document.getElementById('StudentId-header');
   idHeader.textContent = clickedstudent.id
   table = document.getElementById('student-table')
+  //reset Student List of Lecture table
   table.innerHTML = StudentoriginalHTML;
   table = table.getElementsByTagName('tbody')[0];
   console.log(clickedstudent)
@@ -434,6 +501,7 @@ function createStudentsNoteTable(clickedstudent) {
     deletion.addEventListener("click", deleteLectureFromStudent)
   }
 }
+// delete lecture from student table
 function deleteLectureFromStudent(e){
   let lecture;
   let id = document.getElementById('StudentId-header').textContent;
@@ -456,6 +524,7 @@ function deleteLectureFromStudent(e){
   refleshStudentTable();
   bringTable("StudentsTable");
 }
+//delete lecture
 function deleteLecture(e) {
   row = e.target.parentElement.parentElement;
   row.removeEventListener("click", lectureRowClick)
@@ -468,6 +537,7 @@ function deleteLecture(e) {
   createLecturesTable();
   refleshStudentTable()
 }
+
 function createLecture(name, is7PointScale) {
   return {
     name: name,
@@ -519,7 +589,7 @@ function createStudent(name, id, midtermscore, finalscore) {
 
 
 
-/// Confetti.js
+/// Confetti.js Basicly Confetti Stuff
 
 var maxParticleCount = 150; //set max confetti count
 var particleSpeed = 2; //set the particle animation speed

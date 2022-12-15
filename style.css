@@ -1,7 +1,8 @@
 @font-face {
   font-family: 'oldNewsPaper';
-  src:  url('resources/OldNewspaperTypes.ttf') format('truetype')
+  src: url('resources/OldNewspaperTypes.ttf') format('truetype')
 }
+
 body {
   font-family: 'oldNewsPaper', sans-serif;
   margin: 0;

@@ -24,98 +24,103 @@
             <!-- <span onclick="bringTable('LecturesTable')">Lectures</span> -->
         </nav>
         <div id="table-section">
-                <form id="Lecture-Form" class="Tables-active" action="#" >
-                    <input id="lname" placeholder="Lecture Name" type="text">
-                    <label class="switch">
-                        <input id="pointscale" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                    <span style="margin-top: 3px;font-size:large;"> 7 point Scale</span>
-                    <input type="submit" style="padding: 20px; margin-top:20px; border-radius: 10px;" onclick="insertLecture('Lecture-Form')"></input>
-                </form>
+            <form id="Lecture-Form" class="Tables-active" action="#">
+                <input id="lname" placeholder="Lecture Name" type="text">
+                <label class="switch">
+                    <input id="pointscale" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                <span style="margin-top: 3px;font-size:large;"> 7 point Scale</span>
+                <input type="submit" style="padding: 20px; margin-top:20px; border-radius: 10px;"
+                    onclick="insertLecture('Lecture-Form')"></input>
+            </form>
             <div id="LecturesTable" class="Tables-hidden">
                 <div id="table-navbar">
                     <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
                 </div>
                 <table id="lectures-Table">
-                <thead>
-                    <tr>
-                        <td>Lecture Name</td>
-                        <td>Lecture Point System</td>
-                        <td>Delete</td>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
+                    <thead>
+                        <tr>
+                            <td>Lecture Name</td>
+                            <td>Lecture Point System</td>
+                            <td>Delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
                 </table>
-        </div>
-        <div id="Lecture" class="Tables-hidden">
-            <h1 id="Lecture-header">Lecture Name</h1>
-            <form id="student-Form" action="#" >
-                <input id="studentNameInput" placeholder="Student Name" type="text">
-                <input id="studentIdInput" placeholder="studentID" type="number" min="0" oninput= "this.value =!!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" >
-                <input id="studentMidtermInput" placeholder="Midterm" type="number" min="0" oninput= "this.value =!!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-                <input id="studentFinalInput" placeholder="Final" type="number" min="0" oninput= "this.value =!!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-                <input type="submit" value="Add" style="padding: 10px; margin-top:20px;" onclick="addStudentToLecture()"></input>
-            </form>
-            <div id="table-navbar">
-                <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
             </div>
-            <div id="lecture-buttons">
-                <button onclick="displayStudents(false)">Failed Student</button>
-                <button onclick="displayStudents(true)">Succes Student</button>
+            <div id="Lecture" class="Tables-hidden">
+                <h1 id="Lecture-header">Lecture Name</h1>
+                <form id="student-Form" action="#">
+                    <input id="studentNameInput" placeholder="Student Name" type="text">
+                    <input id="studentIdInput" placeholder="studentID" type="number" min="0"
+                        oninput="this.value =!!this.value && Math.abs(this.value) >= 100 ? 100: Math.abs(this.value)">
+                    <input id="studentMidtermInput" placeholder="Midterm" type="number" min="0"
+                        oninput="this.value =!!this.value && Math.abs(this.value) >= 100 ? 100 : Math.abs(this.value)">
+                    <input id="studentFinalInput" placeholder="Final" type="number" min="0"
+                        oninput="this.value =!!this.value && Math.abs(this.value) >= 100 ? 100 : Math.abs(this.value)">
+                    <input type="submit" value="Add" style="padding: 10px; margin-top:20px;"
+                        onclick="addStudentToLecture()"></input>
+                </form>
+                <div id="table-navbar">
+                    <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+                </div>
+                <div id="lecture-buttons">
+                    <button onclick="displayStudents(false)">Failed Student</button>
+                    <button onclick="displayStudents(true)">Succes Student</button>
+                </div>
+                <table id="lecture-Table">
+                    <thead>
+                        <tr>
+                            <td>Student name</td>
+                            <td>Student id</td>
+                            <td>Midterm</td>
+                            <td>Final</td>
+                            <td>Grade</td>
+                            <td>Delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-            <table id = "lecture-Table">
-                <thead>
-                    <tr>
-                        <td>Student name</td>
-                        <td>Student id</td>
-                        <td>Midterm</td>
-                        <td>Final</td>
-                        <td>Grade</td>
-                        <td>Delete</td>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <div id="StudentsTable" class="Tables-hidden">
-            <div id="table-navbar">
-                <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+            <div id="StudentsTable" class="Tables-hidden">
+                <div id="table-navbar">
+                    <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+                </div>
+                <table id="students-table">
+                    <thead>
+                        <tr>
+                            <td>Student Name</td>
+                            <td>Student Id</td>
+                            <td>delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-            <table id="students-table">
-            <thead>
-                <tr>
-                    <td>Student Name</td>
-                    <td>Student Id</td>
-                    <td>delete</td>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            </table>
-    </div>  
-    <div id="StudentTable" class="Tables-hidden">
-        <h1 id="Student-header">Student Name</h1>
-        <h2 id="StudentId-header">Student number</h2>
-        <div id="table-navbar">
-            <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
-        </div>
-        <table id="student-table">
-        <thead>
-            <tr>
-                <td>lecture Name</td>
-                <td>midterm</td>
-                <td>Final</td>
-                <td>Grade</td>
-                <td>delete</td>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-        </table>
-</div>  
+            <div id="StudentTable" class="Tables-hidden">
+                <h1 id="Student-header">Student Name</h1>
+                <h2 id="StudentId-header">Student number</h2>
+                <div id="table-navbar">
+                    <input type="text" id="searchBar" onkeyup="Search()" placeholder="Search for names..">
+                </div>
+                <table id="student-table">
+                    <thead>
+                        <tr>
+                            <td>lecture Name</td>
+                            <td>midterm</td>
+                            <td>Final</td>
+                            <td>Grade</td>
+                            <td>delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
     </section>
 </body>
 
