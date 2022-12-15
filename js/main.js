@@ -1,5 +1,8 @@
 const lectureList = []
-const studentList = new Object();
+let studentList;
+let currentLectureFailedStudentList = []
+let currentLectureSuccesStudentList = []
+
 var LecturesoriginalHTML = document.getElementById("lectures-Table").innerHTML;
 var LectureoriginalHTML = document.getElementById("lecture-Table").innerHTML;
 var StudentsoriginalHTML = document.getElementById("students-table").innerHTML;
@@ -17,7 +20,7 @@ function Search() {
     sndtd = tr[i].getElementsByTagName("td")[1];
     if (td) {
       txtValue = td.textContent || td.innerText;
-      txtValuesnd = sndtd.textContent  || sndtd.innerText;
+      txtValuesnd = sndtd.textContent || sndtd.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValuesnd.indexOf(filter) > -1) {
         tr[i].style.display = "";
       } else {
@@ -72,6 +75,7 @@ function createLecturesTable() {
     newRow = table.insertRow();
     lectureName = newRow.insertCell();
     lecture_point_system = newRow.insertCell();
+    deletion = newRow.insertCell();
     if (element.is7PointScale) {
       lecturepointtext = "7 point system"
     } else {
@@ -81,10 +85,14 @@ function createLecturesTable() {
     lecture_point_system_node = document.createTextNode(lecturepointtext);
     lectureName.appendChild(namenode);
     lecture_point_system.appendChild(lecture_point_system_node);
-    newRow.addEventListener("click", lecturerowClick)
+    var img = document.createElement('img');
+    img.src = "/resources/trash-bin.png"
+    deletion.appendChild(img)
+    deletion.addEventListener("click", deleteLecture)
+    newRow.addEventListener("click", lectureRowClick)
   });
 }
-function lecturerowClick(e) {
+function lectureRowClick(e) {
   row = e.currentTarget;
   let lecturename = row.cells[0].textContent
   for (var i = 0; i < lectureList.length; i++) {
@@ -95,8 +103,25 @@ function lecturerowClick(e) {
   bringTable('Lecture')
   createLectureTable(clickedLecture)
 }
+function deleteLecture(e) {
+  row = e.target.parentElement.parentElement;
+  row.removeEventListener("click", lectureRowClick)
+  rowname = row.getElementsByTagName("td")[0].textContent;
+  for (var i = 0; i < lectureList.length; i++) {
+    if (lectureList[i].name === rowname) {
+      console.log(lectureList[i].name, rowname)
+      lectureList.splice(i, 1);
+    }
+  }
+  createLecturesTable();
+  refleshStudentTable()
+}
 function createLectureTable(clickedLecture) {
-  const failedStudentList = []
+  currentLectureFailedStudentList = []
+  currentLectureSuccesStudentList = []
+  let MeanOfCurrentLectureMidterm = 0;
+  let MeanOfCurrentLectureFinal = 0;
+  let MeanOfCurrentLecture = 0;
   table = document.getElementById('lecture-Table')
   table.innerHTML = LectureoriginalHTML;
   header = document.getElementById('Lecture-header');
@@ -111,34 +136,47 @@ function createLectureTable(clickedLecture) {
     midterm = newRow.insertCell();
     final = newRow.insertCell();
     grade = newRow.insertCell();
+    deletion = newRow.insertCell();
     var meanofStudent = Math.ceil((student.midtermscore * 0.4) + (student.finalscore * 0.6));
     if (is7PointScale) {
       if ((93 <= meanofStudent) && (meanofStudent <= 100)) {
         grade_note_text = "A"
+        currentLectureSuccesStudentList.push(student);
       } else if ((85 <= meanofStudent) && (meanofStudent <= 92)) {
         grade_note_text = "B"
+        currentLectureSuccesStudentList.push(student);
       } else if ((77 <= meanofStudent) && (meanofStudent <= 84)) {
         grade_note_text = "C"
+        currentLectureSuccesStudentList.push(student);
       } else if ((70 <= meanofStudent) && (meanofStudent <= 76)) {
         grade_note_text = "D"
+        currentLectureSuccesStudentList.push(student);
       } else {
         grade_note_text = "F"
+        currentLectureFailedStudentList.push(student);
       }
     } else {
       if ((90 <= meanofStudent) && (meanofStudent <= 100)) {
         grade_note_text = "A"
+        currentLectureSuccesStudentList.push(student);
+
       } else if ((80 <= meanofStudent) && (meanofStudent <= 89)) {
         grade_note_text = "B"
+        currentLectureSuccesStudentList.push(student);
+
       } else if ((70 <= meanofStudent) && (meanofStudent <= 79)) {
         grade_note_text = "C"
+        currentLectureSuccesStudentList.push(student);
+
       } else if ((60 <= meanofStudent) && (meanofStudent <= 69)) {
         grade_note_text = "D"
+        currentLectureSuccesStudentList.push(student);
+
       } else {
         grade_note_text = "F"
+        currentLectureFailedStudentList.push(student);
       }
-    }
-    if(grade_note_text === "F"){
-      failedStudentList.push(student);
+
     }
     student.grade = grade_note_text;
     studentname_node = document.createTextNode(student.name);
@@ -151,7 +189,66 @@ function createLectureTable(clickedLecture) {
     midterm.appendChild(midterm_node);
     final.appendChild(final_node);
     grade.appendChild(grade_node);
+    var img = document.createElement('img');
+    img.src = "/resources/trash-bin.png"
+    deletion.appendChild(img)
+    deletion.addEventListener("click", deleteStudent)
+    MeanOfCurrentLecture += meanofStudent;
+    MeanOfCurrentLectureMidterm += parseInt(student.midtermscore);
+    MeanOfCurrentLectureFinal += parseInt(student.finalscore);
+    newRow.addEventListener("click", updateStudentRow)
   }
+  MeanOfCurrentLecture = (MeanOfCurrentLecture / clickedLecture.studentList.length);
+  MeanOfCurrentLectureMidterm = (MeanOfCurrentLectureMidterm / clickedLecture.studentList.length);
+  MeanOfCurrentLectureFinal = (MeanOfCurrentLectureFinal / clickedLecture.studentList.length);
+  if (MeanOfCurrentLecture || MeanOfCurrentLectureMidterm || MeanOfCurrentLectureFinal) {
+    meanrow = table.insertRow();
+    nameofrow = meanrow.insertCell();
+    meanrow.insertCell();
+    meanOfMidterm = meanrow.insertCell();
+    meanOfFinal = meanrow.insertCell();
+    meanOfGrade = meanrow.insertCell();
+    meanOfMidterm_node = document.createTextNode(MeanOfCurrentLectureMidterm.toFixed(2));
+    meanOfFinal_node = document.createTextNode(MeanOfCurrentLectureFinal.toFixed(2));
+    mean_node = document.createTextNode(MeanOfCurrentLecture.toFixed(2));
+    nameofrow.appendChild(document.createTextNode("MeanOfCourse"))
+    meanOfGrade.appendChild(mean_node);
+    meanOfMidterm.appendChild(meanOfMidterm_node);
+    meanOfFinal.appendChild(meanOfFinal_node);
+  }
+}
+function updateStudentRow(e) {
+  row = e.currentTarget;
+  let name = row.cells[0].textContent
+  let id = row.cells[1].textContent
+  let midterm = row.cells[2].textContent
+  let final = row.cells[3].textContent
+  document.getElementById('studentNameInput').value = name;
+  document.getElementById('studentIdInput').value = id;
+  document.getElementById('studentMidtermInput').value = midterm;
+  document.getElementById('studentFinalInput').value = final;
+  var element = document.getElementById("header");
+  element.scrollIntoView({ behavior: "smooth" });
+  refleshStudentTable()
+}
+function deleteStudent(e) {
+  var lectureName = document.getElementById('Lecture-header').textContent;
+  for (var i = 0; i < lectureList.length; i++) {
+    if (lectureList[i].name === lectureName) {
+      currentLecture = lectureList[i]
+    }
+  }
+  row = e.target.parentElement.parentElement;
+  row.removeEventListener("click", lectureRowClick)
+  rowid = row.getElementsByTagName("td")[1].textContent;
+  for (var i = 0; i < currentLecture.studentList.length; i++) {
+    element = currentLecture.studentList[i]
+    if (element.id === rowid) {
+      currentLecture.studentList.splice(i, 1);
+    }
+  }
+  createLectureTable(currentLecture);
+  refleshStudentTable()
 }
 function addStudentToLecture() {
   var lectureName = document.getElementById('Lecture-header').textContent;
@@ -187,9 +284,43 @@ function addStudentToLecture() {
     currentLecture.studentList.push(createStudent(studentname, studentid, midterm, final))
   }
   createLectureTable(currentLecture);
-}
+  refleshStudentTable()
 
+}
+function displayStudents(isSuccesStudentsList) {
+  let list;
+  if (isSuccesStudentsList) list = currentLectureSuccesStudentList;
+  else list = currentLectureFailedStudentList;
+  table = document.getElementById('lecture-Table')
+  table.innerHTML = LectureoriginalHTML;
+  table = table.getElementsByTagName('tbody')[0];
+  for (var i = 0; i < list.length; i++) {
+    student = list[i]
+    newRow = table.insertRow();
+    studentName = newRow.insertCell();
+    studentId = newRow.insertCell();
+    midterm = newRow.insertCell();
+    final = newRow.insertCell();
+    grade = newRow.insertCell();
+    deletion = newRow.insertCell();
+    studentname_node = document.createTextNode(student.name);
+    studentname_Id = document.createTextNode(student.id);
+    midterm_node = document.createTextNode(student.midtermscore);
+    final_node = document.createTextNode(student.finalscore);
+    grade_node = document.createTextNode(student.grade);
+    studentName.appendChild(studentname_node);
+    studentId.appendChild(studentname_Id);
+    midterm.appendChild(midterm_node);
+    final.appendChild(final_node);
+    grade.appendChild(grade_node);
+    var img = document.createElement('img');
+    img.src = "/resources/trash-bin.png"
+    deletion.appendChild(img)
+    deletion.addEventListener("click", deleteStudent)
+  }
+}
 function refleshStudentList() {
+  studentList = new Object();
   for (var i = 0; i < lectureList.length; i++) {
     for (var j = 0; j < lectureList[i].studentList.length; j++) {
       student = lectureList[i].studentList[j]
@@ -228,12 +359,36 @@ function createStudentsTable() {
     newRow = table.insertRow();
     studentName = newRow.insertCell();
     studentId = newRow.insertCell();
+    deletion = newRow.insertCell();
     studentname_node = document.createTextNode(student.name);
     studentname_Id = document.createTextNode(student.id);
     studentName.appendChild(studentname_node);
     studentId.appendChild(studentname_Id);
+    var img = document.createElement('img');
+    img.src = "/resources/trash-bin.png"
+    deletion.appendChild(img)
+    deletion.addEventListener("click", deleteAllStudent)
     newRow.addEventListener("click", studentrowClick)
   }
+}
+
+function deleteAllStudent(e){
+row = e.currentTarget.parentElement;
+console.log(row)  
+row.removeEventListener("click", studentrowClick)
+studentId = row.getElementsByTagName("td")[1].textContent;
+console.log(studentId)
+for (var i = 0; i < lectureList.length; i++) {
+for (var j = 0; j < lectureList[i].studentList.length; j++) {
+  student = lectureList[i].studentList[j]
+  console.log(lectureList[i].name)
+  console.log(student.name)
+  if(student.id === studentId){
+    lectureList[i].studentList.splice(j,1)
+  }
+}}
+refleshStudentList();
+createStudentsTable();
 }
 
 function studentrowClick(e) {
@@ -249,6 +404,10 @@ function studentrowClick(e) {
   createStudentsNoteTable(clickedstudent);
 }
 function createStudentsNoteTable(clickedstudent) {
+  header = document.getElementById('Student-header');
+  header.textContent = clickedstudent.name
+  idHeader = document.getElementById('StudentId-header');
+  idHeader.textContent = clickedstudent.id
   table = document.getElementById('student-table')
   table.innerHTML = StudentoriginalHTML;
   table = table.getElementsByTagName('tbody')[0];
@@ -260,6 +419,7 @@ function createStudentsNoteTable(clickedstudent) {
     midterm = newRow.insertCell();
     final = newRow.insertCell();
     grade = newRow.insertCell();
+    deletion = newRow.insertCell();
     lecturename_node = document.createTextNode(lecture.lecture);
     midterm_node = document.createTextNode(lecture.midterm);
     final_node = document.createTextNode(lecture.final);
@@ -268,7 +428,45 @@ function createStudentsNoteTable(clickedstudent) {
     midterm.appendChild(midterm_node);
     final.appendChild(final_node);
     grade.appendChild(grade_node);
+    var img = document.createElement('img');
+    img.src = "/resources/trash-bin.png"
+    deletion.appendChild(img)
+    deletion.addEventListener("click", deleteLectureFromStudent)
   }
+}
+function deleteLectureFromStudent(e){
+  let lecture;
+  let id = document.getElementById('StudentId-header').textContent;
+  row = e.target.parentElement.parentElement;
+  row.removeEventListener("click", lectureRowClick)
+  rowname = row.getElementsByTagName("td")[0].textContent;
+  for (var i = 0; i < lectureList.length; i++) {
+    if (lectureList[i].name === rowname) {
+      lecture = lectureList[i]
+    }
+  }
+  for (var i = 0; i < lecture.studentList.length; i++) {
+    element = lecture.studentList[i]
+    if (element.id === id) {
+      lecture.studentList.splice(i, 1);
+  
+    }
+  }
+  createLecturesTable();
+  refleshStudentTable();
+  bringTable("StudentsTable");
+}
+function deleteLecture(e) {
+  row = e.target.parentElement.parentElement;
+  row.removeEventListener("click", lectureRowClick)
+  rowname = row.getElementsByTagName("td")[0].textContent;
+  for (var i = 0; i < lectureList.length; i++) {
+    if (lectureList[i].name === rowname) {
+      lectureList.splice(i, 1);
+    }
+  }
+  createLecturesTable();
+  refleshStudentTable()
 }
 function createLecture(name, is7PointScale) {
   return {
@@ -282,7 +480,8 @@ function createStudent(name, id, midtermscore, finalscore) {
     name: name,
     id: id,
     midtermscore: midtermscore,
-    finalscore: finalscore
+    finalscore: finalscore,
+    score: []
   }
 }
 

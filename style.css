@@ -1,170 +1,245 @@
-        body{
-            padding-left: 2%;
-            font-family: 'lato', sans-serif;
-        }
-        #header {
-            display: flex;
-            justify-content: center;
-            border: 1px solid black;
-        }
+@font-face {
+  font-family: 'oldNewsPaper';
+  src:  url('resources/OldNewspaperTypes.ttf') format('truetype')
+}
+body {
+  font-family: 'oldNewsPaper', sans-serif;
+  margin: 0;
+  background-color: black;
+}
 
-        nav {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            box-sizing: inherit;
-        }
+#header {
+  display: flex;
+  justify-content: center;
+  border: 1px solid black;
+  background-color: #00c2cb;
+  box-shadow: 3px 3px black;
+  margin-bottom: 3px;
+  box-sizing: border-box;
+}
 
-        nav>span {
-            padding:20px 0px 20px 0px;
-            margin: 10px;
-            text-align: center;
-            width: 100%;
-            background-color: gainsboro;
-        }
+h1 {
+  text-align: center;
+  font-size: xx-large;
+}
 
-        section {
-            display: flex;
-            flex: 4;
-        }
+h2 {
+  text-align: center;
+}
 
-        #table-section {
-            flex: 4;
-            display: flex;
-            flex-direction: column;
-            background-color: gainsboro;
-            padding-left: 15px;
+nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  box-sizing: inherit;
+}
 
-        }
-        #searchBar {
-            width: 100%; 
-            font-size: 16px; 
-            padding: 12px 20px 12px 40px; 
-            border: 1px solid #ddd; 
-            margin-bottom: 12px; 
-            border-radius: 8px;
-          }
-        #Lecture-Form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 50vh;
-        }
-        #student-Form {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-        input {
-            font-size: 2em;
-            margin: 0.5em;
-        }
-        .Tables-active {
-            border-radius: 10px;
-        }
-        .Tables-hidden {
-            display: none !important;
-        }
-        
+nav>span {
+  padding: 20px 0px 20px 0px;
+  margin: 10px;
+  text-align: center;
+  width: 100%;
+  background-color: #f4ede3;
+  border: 2px solid black;
+  box-shadow: 3px 3px black;
+}
 
-        table {
-            background-color: white;
-            padding: 10px;
-            border-collapse: separate;
-            border-spacing:0px 20px;
-            width: 100%;
-            border-radius: 10px;
-        }
-        td {
-            border-radius: 3px;
-            padding: 25px 30px;
-        }
-        tr {
+nav>span:hover {
+  background-color: #ed5f1e;
+}
 
-            box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
-        }
-        table  tr:hover {background-color: #ddd;}
-        #table-navbar {
-            display: flex;
-            justify-content: center;
-            padding: 10px;
-        }
+section {
+  display: flex;
+  flex: 4;
+  background-color: #ed5f1e;
+}
 
-        thead {
-            background-color: #95A5A6;
-            font-size: 1.5em;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
+#table-section {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4ede3;
+  padding-left: 15px;
 
-        #table-header>th {
-            font-size: large;
-            padding: 10px;
-        }
-        /* Buttons and other things */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-          }
-          
-          /* Hide default HTML checkbox */
-          .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-          }
-          
-          /* The slider */
-          .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-          }
-          
-          .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-          }
-          
-          input:checked + .slider {
-            background-color: #2196F3;
-          }
-          
-          input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
-          }
-          
-          input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-          }
-          
-          /* Rounded sliders */
-          .slider.round {
-            border-radius: 34px;
-          }
-          
-          .slider.round:before {
-            border-radius: 50%;
-          }
+}
+
+#searchBar {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+#Lecture-Form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+#lecture-buttons {
+  margin: 0px 10px 20px 10px;
+}
+
+#lecture-buttons>Button {
+  background-color: #ab52c5;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: large;
+  font-family: 'oldNewsPaper', sans-serif;
+}
+
+#student-Form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  font-size: 2em;
+  margin: 0.5em;
+  border-radius: 5px;
+  font-family: 'oldNewsPaper', sans-serif;
+}
+
+input[type=submit] {
+  background-color: #ab52c5;
+  font-family: 'oldNewsPaper', sans-serif;
+}
+
+.Tables-active {
+  border-radius: 10px;
+}
+
+.Tables-hidden {
+  display: none !important;
+}
+
+
+
+table {
+  background-color: white;
+  padding: 10px;
+  border-collapse: separate;
+  border-spacing: 0px 20px;
+  width: 100%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+td {
+  border-radius: 3px;
+  padding: 25px 30px;
+  font-size: 1.5em;
+}
+
+tr {
+
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+}
+
+table tr:hover {
+  background-color: #ddd;
+}
+
+input:hover {
+  background-color: #ddd;
+}
+
+#lecture-buttons>Button:hover {
+  background-color: #ddd;
+}
+
+#table-navbar {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+thead {
+  background-color: #efc202;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  box-shadow: 3px 3px black;
+
+}
+
+thead>tr:hover {
+  background-color: #efc202;
+}
+
+#table-header>th {
+  font-size: large;
+  padding: 10px;
+}
+
+/* Buttons and other things */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: #efc202;
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px #efc202;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
