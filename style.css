@@ -8,7 +8,7 @@ body {
   margin: 0;
   background-color: black;
 }
-
+/* header of page section */
 #header {
   display: flex;
   justify-content: center;
@@ -27,7 +27,7 @@ h1 {
 h2 {
   text-align: center;
 }
-
+/* side section */
 nav {
   flex: 1;
   display: flex;

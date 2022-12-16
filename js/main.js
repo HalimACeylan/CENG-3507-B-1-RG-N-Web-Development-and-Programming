@@ -29,7 +29,7 @@ function Search() {
     }
   }
 }
-//There are 4 table and 1 form(adding Lecture). when user click side panel's <span>s it hide current active table and bring to screen table what user requested for.
+//There are 4 table and 1 form(adding Lecture). when user click side bar's <span>s it hide current active table and bring to screen table what user requested for.
 function bringTable(id) {
   hideTables();
   table = document.getElementById(id);
@@ -50,6 +50,10 @@ function insertLecture(Form) {
   if ((form.lname.value.toUpperCase() === "WEB DEVELOPMENT AND PROGRAMMING") || (form.lname.value.toUpperCase() === "BEKIR TANER DINÇER") || (form.lname.value.toUpperCase() === "SELAHATTIN AKSOY")) {
     startConfetti();
     setTimeout(stopConfetti, 3000);
+  }
+  if(form.lname.value === ""){
+    alert("Lecture Name does not be empty");
+    return -1;
   }
   //if list is empty don't check exist
   if (lectureList.length === 0) {
@@ -317,6 +321,10 @@ function addStudentToLecture() {
   final = document.getElementById('studentFinalInput').value;
   isStudentAlreadyExistInClass = false
   isStudentSame = false;
+  if(studentname === "" || studentid === "" ){
+    alert("Student name or Student ID cannot be empty");
+    return -1;
+  }
   // Check Student by id if it is already in Lecture 
   currentLecture.studentList.every(element => {
     isStudentAlreadyExistInClass = element.id === studentid;
